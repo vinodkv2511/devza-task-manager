@@ -1,6 +1,7 @@
 import { fetchTasks } from "../../apis/tasks";
 import apiConstants from '../../apis/apiConstants';
 import { useQuery } from 'react-query';
+import TaskCard from "../../components/taskCard/taskCard";
 
 const Tasks = () => {
     
@@ -10,7 +11,7 @@ const Tasks = () => {
         if(!data?.data) {
             return null;
         }
-        return data?.data?.tasks?.map( task => <p key={`${task.id}`}>{task.message}</p>)
+        return data?.data?.tasks?.map( task => <TaskCard key={`${task.id}`} task={task}/>)
     }
 
     return (

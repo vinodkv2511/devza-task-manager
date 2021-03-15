@@ -1,0 +1,68 @@
+
+.task-card {
+    width: 80%;
+    min-width: 320px;
+    padding: 20px;
+    box-shadow: 3px 3px 10px 0px rgba(161,161,161,0.7);
+    display: flex;
+    border-radius: 10px;
+    margin: 20px 15px;
+
+    .user-details {
+        flex: 1;
+    }
+
+    .task-details {
+        flex: 3;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        p {
+            text-align: left;
+        }
+        .inline-details {
+            display: flex;
+            align-items: baseline;
+            .task-id {
+                font-weight: 800;
+                font-size: 1.2rem;
+                &:before {
+                    content: '#';
+                    margin: 0;
+                }
+            }
+
+            .asignee-name {
+                &:before {
+                    content: '|';
+                    margin-left: 8px;
+                    margin-right: 8px;
+                    position: relative;
+                    top: -2px;
+                }
+            }
+        }
+
+        .task-message {
+            margin-bottom: 10px;
+        }
+        .task-date {
+
+            &.due, &.created {
+                &:before {
+                    font-size: 0.7rem;
+                }
+            }
+
+            &.due:before {
+                content: 'Due on:';
+                margin-right: 23px;
+            }
+
+            &.created:before {
+                margin-right: 5px;
+                content: 'Created on:';
+            }
+        }
+    }
+}
