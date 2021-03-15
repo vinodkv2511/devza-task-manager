@@ -8,7 +8,7 @@ const TaskCard = ({ task, user }) => {
     return (
         <div className={'task-card'}>
             <div className={'user-details'}>
-                <img src={user?.picture || userPlaceholder} className={'user-image'} />
+                <img src={user?.picture || userPlaceholder} className={'user-image'} alt={'user'}/>
             </div>
             <div className={'task-details'}>
                 <div className={'inline-details'}>
