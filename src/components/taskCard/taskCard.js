@@ -1,12 +1,14 @@
-import './taskCard.scss';
 import moment from 'moment';
 
+import './taskCard.scss';
 
-const TaskCard = ({ task }) => {
+import userPlaceholder from '../../assets/images/user.png';
+
+const TaskCard = ({ task, user }) => {
     return (
         <div className={'task-card'}>
             <div className={'user-details'}>
-
+                <img src={user?.picture || userPlaceholder} className={'user-image'} />
             </div>
             <div className={'task-details'}>
                 <div className={'inline-details'}>
