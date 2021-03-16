@@ -8,7 +8,7 @@ import spinnerSvg from '../../assets/images/Rolling-1s-200px.svg';
 import { PRIORITY, DRAGGABLE_TYPES } from '../../constants';
 
 
-const TaskCard = ({ task, user, isUpdating, isUpdateError }) => {
+const TaskCard = ({ task, user, isUpdating, updateError }) => {
 
     const [{isDragging}, taskDrag] = useDrag(() => ({
         type: DRAGGABLE_TYPES.TASK,
@@ -34,8 +34,11 @@ const TaskCard = ({ task, user, isUpdating, isUpdateError }) => {
                 <p className={'task-date due'}> {moment(task.due_date).format('DD-MM-YYYY')} </p>
             </div>
             {
-                isUpdating && 
-                <img className="loader card-icon-small" src={spinnerSvg} />
+                isUpdating
+                ? <img className="card-status-icon-small" src={spinnerSvg} alt='spinner' title={`Please wait. Saving your changes!`}/>
+                : updateError 
+                    ? <img className="card-status-icon-small" src={spinnerSvg} alt={'error'} title={`${updateError}\nPlease refresh the page to see saved state`}/>
+                    : null
             }
         </div>
     )

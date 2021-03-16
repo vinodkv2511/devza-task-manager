@@ -97,12 +97,10 @@
         }
     }
 
-    .card-icon-small {
-        &.loader {
-            position: absolute;
-            width: 15px;
-            top: 10px;
-            right: 10px;
-        }
+    .card-status-icon-small {
+        position: absolute;
+        width: 15px;
+        top: 10px;
+        right: 10px;
     }
 }

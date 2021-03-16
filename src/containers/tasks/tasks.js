@@ -64,11 +64,12 @@ const Tasks = () => {
             let updateResp = await postTaskUpdate(dataToPost);
             console.log(updateResp);
             setTasksUpdating({...tasksUpdating, [data.id]: false});
+            setTasksUpdateErrors({...tasksUpdateErrors, [data.id]: ''});
         } catch (e) {
             if(axios.isCancel(e)) {
                 return;
             }
-            setError(e.message);
+            setTasksUpdateErrors({...tasksUpdateErrors, [data.id]: e.message});
             setTasksUpdating({...tasksUpdating, [data.id]: false});
         } 
     }
@@ -88,7 +89,7 @@ const Tasks = () => {
                 task={task} 
                 user={usersMap[task.assigned_to]} 
                 isUpdating={tasksUpdating[task.id]} 
-                isUpdateError={tasksUpdateErrors[task.id]}/>)
+                updateError={tasksUpdateErrors[task.id]}/>)
     }
 
     const handleDrop = (priority, item) => {
