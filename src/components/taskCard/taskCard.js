@@ -11,6 +11,7 @@ const TaskCard = ({ task, user }) => {
 
     const [{isDragging}, taskDrag] = useDrag(() => ({
         type: DRAGGABLE_TYPES.TASK,
+        item: {...task},
         collect: monitor => ({
           isDragging: !!monitor.isDragging(),
         }),

@@ -1,3 +1,5 @@
 import client from './client';
 
-export const fetchUsers = () => client.get('/tasks/listusers');
+export const fetchUsers = (cancelToken) => client.get('/tasks/listusers', {
+    cancelToken: cancelToken.token
+});

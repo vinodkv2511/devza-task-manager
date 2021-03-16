@@ -1,11 +1,9 @@
-import { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
 // APIs
 import { fetchTasks } from "../../apis/tasks";
-import apiConstants from '../../apis/apiConstants';
 import { fetchUsers } from "../../apis/users";
 
 // Components
@@ -14,48 +12,93 @@ import TaskCard from "../../components/taskCard/taskCard";
 //Assets
 import './tasks.scss';
 import DroppablePane from '../../components/droppablePane/droppablePane';
-import { PRIORITY } from '../../constants';
+import axios from 'axios';
 
 const Tasks = () => {
 
     const [ isPaneMode, setIsPaneMode] = useState(true);
-    
-    const  { isLoading: isTasksLoading, error: tasksError, data: tasksResp, isError: isTasksError } = useQuery(apiConstants.GET_TASKS, fetchTasks);
-    const  { isLoading: isUsersLoading, error: usersError, data: usersResp, isError: isUsersError } = useQuery(apiConstants.GET_USERS, fetchUsers );
+    const [ tasks, setTasks ] = useState([]);
+    const [ users, setUsers ] = useState([]);
 
-    const renderTasks = (tasks, users) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+    
+    useEffect( () => {
+        let cancelTokenTasks = axios.CancelToken.source();
+        let cancelTokenUsers = axios.CancelToken.source();
+        loadData(cancelTokenTasks, cancelTokenUsers);
+
+        return () => {
+            cancelTokenTasks.cancel();
+            cancelTokenUsers.cancel();
+        }
+    }, [])
+
+    const loadData = async (cancelTokenTasks, cancelTokenUsers) => {
+        try {
+            setIsLoading(true);
+            let tasksProm = fetchTasks(cancelTokenTasks);
+            let usersProm = fetchUsers(cancelTokenUsers);
+
+            let [tasksResp, usersResp] = await Promise.all([tasksProm, usersProm]);
+            setTasks(tasksResp?.data?.tasks);
+            setUsers(usersResp?.data?.users);
+            setError('');
+            setIsLoading(false);
+        } catch (e) {
+            if(axios.isCancel(e)) {
+                return;
+            }
+            setError(e.message);
+            setIsLoading(false);
+        } 
+    } 
+
+    const renderTasks = (tasks) => {
         const usersMap = {};
         users?.forEach(user => {
             usersMap[user.id] = {...user}
         });
 
-        if(!tasksResp?.data) {
+        if(!tasks) {
             return null;
         }
 
         return tasks?.map( task => <TaskCard key={`${task.id}`} task={task} user={usersMap[task.assigned_to]}/>)
     }
 
-    const renderPanes = (tasks, users) => {
+    const handleDrop = (priority, item) => {
+        let newTasks = tasks.map( task => {
+            if(item.id === task.id) {
+                let newTask = {...task, priority: `${priority}`};
+                return newTask;
+            } else {
+                return {...task};
+            }
+        })
+        setTasks(newTasks);
+    }
+
+    const renderPanes = () => {
 
         return (
             <div className="panes-container">
                 <div className={'priority-pane-container'}>
                     <p className={'pane-label'}>Low</p>
-                    <DroppablePane className={'pane'}>
-                        {renderTasks(tasks.filter( task => PRIORITY[task.priority] === 'low'), users)}
+                    <DroppablePane className={'pane'} onDrop={(item) => handleDrop(1, item)}>
+                        {renderTasks(tasks.filter( task => Number(task.priority) === 1))}
                     </DroppablePane>
                 </div>
                 <div className={'priority-pane-container'}>
                     <p className={'pane-label'}>Medium</p>
-                    <DroppablePane  className={'pane'}>
-                        {renderTasks(tasks.filter( task => PRIORITY[task.priority] === 'medium'), users)}
+                    <DroppablePane  className={'pane'} onDrop={(item) => handleDrop(2, item)}>
+                        {renderTasks(tasks.filter( task => Number(task.priority) === 2))}
                     </DroppablePane>
                 </div>
                 <div className={'priority-pane-container'}>
                     <p className={'pane-label'}>High</p>
-                    <DroppablePane  className={'pane'}>
-                        {renderTasks(tasks.filter( task => PRIORITY[task.priority] === 'high'), users)}
+                    <DroppablePane  className={'pane'} onDrop={(item) => handleDrop(3, item)}>
+                        {renderTasks(tasks.filter( task => Number(task.priority) === 3))}
                     </DroppablePane>
                 </div>
             </div>
@@ -63,10 +106,11 @@ const Tasks = () => {
     }
 
     const renderContent = () => {
+        console.log(tasks);
         if( isPaneMode ) {
-            return renderPanes(tasksResp?.data?.tasks, usersResp?.data?.users)
+            return renderPanes()
         } else {
-            return renderTasks(tasksResp?.data?.tasks, usersResp?.data?.users);
+            return renderTasks(tasks);
         }
     }
 
@@ -78,10 +122,10 @@ const Tasks = () => {
                 </div>
                 <div className={`content-row tasks-content-container ${isPaneMode ? 'pane' : 'list'}`}>
                     {
-                        (isTasksLoading || isUsersLoading)
+                        isLoading
                         ? <p>Loading ...</p>
-                        : (isUsersError || isTasksError)
-                            ? <p> { isUsersError ? usersError.message : tasksError.message} </p>
+                        : error
+                            ? <p> { error } </p>
                             : renderContent()
                     }
                 </div>

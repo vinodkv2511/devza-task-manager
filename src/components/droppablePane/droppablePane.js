@@ -6,11 +6,11 @@ import './droppablePane.scss';
 const DroppablePane = ({ className, children, onDrop }) => {
     const [{ isOver }, droppablePane] = useDrop(() => ({
         accept: DRAGGABLE_TYPES.TASK,
-        drop: () => onDrop && onDrop(),
+        drop: (item, monitor) => onDrop && onDrop(item),
         collect: monitor => ({
-          isOver: !!monitor.isOver(),
+          isOver: !!monitor.isOver()
         }),
-      }), [])
+      }), [children])
 
     return (
         <div className={`droppable-pane ${className} ${isOver && 'dropping'}`} ref={droppablePane} >

@@ -1,3 +1,5 @@
 import client from './client';
 
-export const fetchTasks = () => client.get('/tasks/list');
+export const fetchTasks = (cancelToken) => client.get('/tasks/list', {
+    cancelToken: cancelToken.token
+});
