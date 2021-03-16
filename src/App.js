@@ -16,8 +16,6 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="App">
-        Hello
-
         <Router>
           <Switch>
             <Route exact path="/"> <Redirect to="/tasks" /> </Route>  
