@@ -3,7 +3,7 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
 // APIs
-import { fetchTasks } from "../../apis/tasks";
+import { fetchTasks, postTaskUpdate } from "../../apis/tasks";
 import { fetchUsers } from "../../apis/users";
 
 // Components
@@ -22,6 +22,9 @@ const Tasks = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+
+    const [ tasksUpdating, setTasksUpdating ] = useState({});
+    const [ tasksUpdateErrors, setTasksUpdateErrors ] = useState({});
     
     useEffect( () => {
         let cancelTokenTasks = axios.CancelToken.source();
@@ -54,6 +57,22 @@ const Tasks = () => {
         } 
     } 
 
+    const updateTask = async (data) => {
+        try {
+            setTasksUpdating({...tasksUpdating, [data.id]: true});
+            let dataToPost = {...data, taskid: data.id}
+            let updateResp = await postTaskUpdate(dataToPost);
+            console.log(updateResp);
+            setTasksUpdating({...tasksUpdating, [data.id]: false});
+        } catch (e) {
+            if(axios.isCancel(e)) {
+                return;
+            }
+            setError(e.message);
+            setTasksUpdating({...tasksUpdating, [data.id]: false});
+        } 
+    }
+
     const renderTasks = (tasks) => {
         const usersMap = {};
         users?.forEach(user => {
@@ -64,18 +83,25 @@ const Tasks = () => {
             return null;
         }
 
-        return tasks?.map( task => <TaskCard key={`${task.id}`} task={task} user={usersMap[task.assigned_to]}/>)
+        return tasks?.map( task => <TaskCard 
+                key={`${task.id}`} 
+                task={task} 
+                user={usersMap[task.assigned_to]} 
+                isUpdating={tasksUpdating[task.id]} 
+                isUpdateError={tasksUpdateErrors[task.id]}/>)
     }
 
     const handleDrop = (priority, item) => {
         let newTasks = tasks.map( task => {
             if(item.id === task.id) {
                 let newTask = {...task, priority: `${priority}`};
+                updateTask(newTask);
                 return newTask;
             } else {
                 return {...task};
             }
-        })
+        });
+        
         setTasks(newTasks);
     }
 

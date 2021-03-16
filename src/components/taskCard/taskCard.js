@@ -4,10 +4,11 @@ import { useDrag } from 'react-dnd'
 import './taskCard.scss';
 
 import userPlaceholder from '../../assets/images/user.png';
+import spinnerSvg from '../../assets/images/Rolling-1s-200px.svg';
 import { PRIORITY, DRAGGABLE_TYPES } from '../../constants';
 
 
-const TaskCard = ({ task, user }) => {
+const TaskCard = ({ task, user, isUpdating, isUpdateError }) => {
 
     const [{isDragging}, taskDrag] = useDrag(() => ({
         type: DRAGGABLE_TYPES.TASK,
@@ -32,6 +33,10 @@ const TaskCard = ({ task, user }) => {
                 <p className={'task-date created'}> {moment(task.created_on).format('DD-MM-YYYY')} </p>
                 <p className={'task-date due'}> {moment(task.due_date).format('DD-MM-YYYY')} </p>
             </div>
+            {
+                isUpdating && 
+                <img className="loader card-icon-small" src={spinnerSvg} />
+            }
         </div>
     )
 }
