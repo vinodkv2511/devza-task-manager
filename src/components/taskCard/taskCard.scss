@@ -1,3 +1,4 @@
+@import '../../assets/styles/colors.scss';
 
 .task-card {
     width: 80%;
@@ -48,8 +49,25 @@
                     top: -2px;
                 }
             }
-        }
 
+        }
+        
+        .task-priority {
+            text-transform: capitalize;
+            font-weight: 500;
+
+            &.low {
+                color: $safe-green;
+            }
+
+            &.medium {
+                color: $warning-orange;
+            }
+            &.high {
+                color: $critical-red;
+            }
+        }
+        
         .task-message {
             margin-bottom: 10px;
         }

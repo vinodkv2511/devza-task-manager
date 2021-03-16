@@ -3,8 +3,10 @@ import moment from 'moment';
 import './taskCard.scss';
 
 import userPlaceholder from '../../assets/images/user.png';
+import { PRIORITY } from '../../constants';
 
 const TaskCard = ({ task, user }) => {
+
     return (
         <div className={'task-card'}>
             <div className={'user-details'}>
@@ -15,6 +17,7 @@ const TaskCard = ({ task, user }) => {
                     <p className={'task-id'}> {task.id} </p>
                     <p className={'asignee-name'}>{task.assigned_name}</p>
                 </div>
+                <p className={`task-priority ${PRIORITY[task.priority]}`}>{PRIORITY[task.priority]}</p>
                 <p className={'task-message'}> {task.message} </p>
                 <p className={'task-date created'}> {moment(task.created_on).format('DD-MM-YYYY')} </p>
                 <p className={'task-date due'}> {moment(task.due_date).format('DD-MM-YYYY')} </p>
