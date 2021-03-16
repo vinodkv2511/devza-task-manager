@@ -12,7 +12,7 @@
     position: relative;
 
     &.dragging {
-        background-color: blue;
+        opacity: 60%;
     }
 
     .user-details {
@@ -93,6 +93,41 @@
             &.created:before {
                 margin-right: 5px;
                 content: 'Created on:';
+            }
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+            margin-top: 10px;
+            .button {
+                margin: 0 5px;
+                padding: 5px 15px;
+                transition: all ease 0.2s;
+                cursor: pointer;
+                &:focus {
+                    outline: none;
+                    border-width: 2px;
+                }
+
+                &.secondary {
+                    background: transparent;
+                    border-radius: 50px;
+                    border-width: 1px;
+                    border-color: $primary;
+                    color: $primary;
+                    font-weight: 500;
+
+                    &:hover {
+                        letter-spacing: 0.1em;
+                    }
+
+                    &.danger{
+                        color: $critical-red;
+                        border-color: $critical-red;
+                    }
+                }
             }
         }
     }

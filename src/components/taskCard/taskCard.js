@@ -33,6 +33,10 @@ const TaskCard = ({ task, user, isUpdating, updateError }) => {
                 <p className={'task-message'}> {task.message} </p>
                 <p className={'task-date created'}> {moment(task.created_on).format('DD-MM-YYYY')} </p>
                 <p className={'task-date due'}> {moment(task.due_date).format('DD-MM-YYYY')} </p>
+                <div className={'buttons-container'}>
+                    <button className="button secondary">EDIT</button>
+                    <button className="button secondary danger">DELETE</button>
+                </div>
             </div>
             {
                 isUpdating
