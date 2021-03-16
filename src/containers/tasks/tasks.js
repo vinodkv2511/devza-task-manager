@@ -13,6 +13,8 @@ import TaskCard from "../../components/taskCard/taskCard";
 import './tasks.scss';
 import DroppablePane from '../../components/droppablePane/droppablePane';
 import axios from 'axios';
+import Modal from '../../components/modal/modal';
+import Button from '../../components/button/button';
 
 const Tasks = () => {
 
@@ -25,6 +27,9 @@ const Tasks = () => {
 
     const [ tasksUpdating, setTasksUpdating ] = useState({});
     const [ tasksUpdateErrors, setTasksUpdateErrors ] = useState({});
+
+    const [ editOrDelete, setEditOrDelete ] = useState(null); // can have edit or delete as values
+    const [ activeTask, setActiveTask ] = useState(null); // Task being edited or deleted
     
     useEffect( () => {
         let cancelTokenTasks = axios.CancelToken.source();
@@ -74,6 +79,35 @@ const Tasks = () => {
         } 
     }
 
+    const handleDrop = (priority, item) => {
+        let newTasks = tasks.map( task => {
+            if(item.id === task.id) {
+                let newTask = {...task, priority: `${priority}`};
+                updateTask(newTask);
+                return newTask;
+            } else {
+                return {...task};
+            }
+        });
+        
+        setTasks(newTasks);
+    }
+
+    const handleEditClick = (task) => {
+        setEditOrDelete('edit');
+        setActiveTask(task);
+    } 
+
+    const handleDeleteClick = (task) => {
+        setEditOrDelete('delete');
+        setActiveTask(task);
+    }
+
+    const handleModalClose = () => {
+        setEditOrDelete(null);
+        setActiveTask(null);
+    }
+
     const renderTasks = (tasks) => {
         const usersMap = {};
         users?.forEach(user => {
@@ -89,21 +123,12 @@ const Tasks = () => {
                 task={task} 
                 user={usersMap[task.assigned_to]} 
                 isUpdating={tasksUpdating[task.id]} 
-                updateError={tasksUpdateErrors[task.id]}/>)
-    }
+                updateError={tasksUpdateErrors[task.id]}
+                onEdit={()=>{handleEditClick(task)}}
+                onDelete={()=>{handleDeleteClick(task)}}
 
-    const handleDrop = (priority, item) => {
-        let newTasks = tasks.map( task => {
-            if(item.id === task.id) {
-                let newTask = {...task, priority: `${priority}`};
-                updateTask(newTask);
-                return newTask;
-            } else {
-                return {...task};
-            }
-        });
-        
-        setTasks(newTasks);
+            />
+                )
     }
 
     const renderPanes = () => {
@@ -141,6 +166,23 @@ const Tasks = () => {
         }
     }
 
+    const renderEditForm = () => {
+
+    }
+
+    const renderDeleteConfirmation = () => {
+        return (
+            <div className={'modal-content-container'}>
+                <p className={"modal-head"}>Delete?</p>
+                <p className={'modal-content-text'}>Do you really want to delete {activeTask.id}</p>
+                <div className={'buttons-container'}>
+                    <Button label={'CANCEL'} onClick={handleModalClose}/>
+                    <Button label={'DELETE'} isDanger={true}/>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <DndProvider backend={HTML5Backend}>
             <div className='page tasks-page'>
@@ -156,6 +198,19 @@ const Tasks = () => {
                             : renderContent()
                     }
                 </div>
+                {
+                    editOrDelete &&
+                    <Modal
+                        onClose={handleModalClose}
+                        shouldCloseOnOutsideClick={true}
+                    >
+                        {
+                            editOrDelete === 'edit'
+                            ? renderEditForm()
+                            : renderDeleteConfirmation()
+                        }
+                    </Modal>
+                }
             </div>
         </DndProvider>
     )

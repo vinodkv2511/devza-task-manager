@@ -7,9 +7,10 @@ import userPlaceholder from '../../assets/images/user.png';
 import spinnerSvg from '../../assets/images/Rolling-1s-200px.svg';
 import warningSvg from '../../assets/images/exclamation-triangle.svg';
 import { PRIORITY, DRAGGABLE_TYPES } from '../../constants';
+import Button from '../button/button';
 
 
-const TaskCard = ({ task, user, isUpdating, updateError }) => {
+const TaskCard = ({ task, user, isUpdating, updateError, onEdit, onDelete }) => {
 
     const [{isDragging}, taskDrag] = useDrag(() => ({
         type: DRAGGABLE_TYPES.TASK,
@@ -34,8 +35,8 @@ const TaskCard = ({ task, user, isUpdating, updateError }) => {
                 <p className={'task-date created'}> {moment(task.created_on).format('DD-MM-YYYY')} </p>
                 <p className={'task-date due'}> {moment(task.due_date).format('DD-MM-YYYY')} </p>
                 <div className={'buttons-container'}>
-                    <button className="button secondary">EDIT</button>
-                    <button className="button secondary danger">DELETE</button>
+                    <Button onClick={onEdit} label={'EDIT'}/>
+                    <Button onClick={onDelete} label={'DELETE'} isDanger={true}/>
                 </div>
             </div>
             {
