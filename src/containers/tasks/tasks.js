@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 // APIs
 import { fetchTasks } from "../../apis/tasks";
@@ -69,20 +71,22 @@ const Tasks = () => {
     }
 
     return (
-        <div className='page tasks-page'>
-            <div className='head-row'>
-                HEAD
+        <DndProvider backend={HTML5Backend}>
+            <div className='page tasks-page'>
+                <div className='head-row'>
+                    HEAD
+                </div>
+                <div className={`content-row tasks-content-container ${isPaneMode ? 'pane' : 'list'}`}>
+                    {
+                        (isTasksLoading || isUsersLoading)
+                        ? <p>Loading ...</p>
+                        : (isUsersError || isTasksError)
+                            ? <p> { isUsersError ? usersError.message : tasksError.message} </p>
+                            : renderContent()
+                    }
+                </div>
             </div>
-            <div className={`content-row tasks-content-container ${isPaneMode ? 'pane' : 'list'}`}>
-                {
-                    (isTasksLoading || isUsersLoading)
-                    ? <p>Loading ...</p>
-                    : (isUsersError || isTasksError)
-                        ? <p> { isUsersError ? usersError.message : tasksError.message} </p>
-                        : renderContent()
-                }
-            </div>
-        </div>
+        </DndProvider>
     )
 }
 

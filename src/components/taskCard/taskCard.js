@@ -1,14 +1,23 @@
 import moment from 'moment';
+import { useDrag } from 'react-dnd'
 
 import './taskCard.scss';
 
 import userPlaceholder from '../../assets/images/user.png';
-import { PRIORITY } from '../../constants';
+import { PRIORITY, DRAGGABLE_TYPES } from '../../constants';
+
 
 const TaskCard = ({ task, user }) => {
 
+    const [{isDragging}, taskDrag] = useDrag(() => ({
+        type: DRAGGABLE_TYPES.TASK,
+        collect: monitor => ({
+          isDragging: !!monitor.isDragging(),
+        }),
+      }))
+
     return (
-        <div className={'task-card'} draggable={true}>
+        <div className={`task-card ${isDragging ? 'dragging' : ''}`} ref={taskDrag}>
             <div className={'user-details'}>
                 <img src={user?.picture || userPlaceholder} className={'user-image'} alt={'user'}/>
             </div>

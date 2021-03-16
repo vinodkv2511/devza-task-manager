@@ -10,6 +10,10 @@
     margin: 20px 15px;
     background-color: $white;
 
+    &.dragging {
+        background-color: blue;
+    }
+
     .user-details {
         flex: 1;
         max-width: 125px;
