@@ -8,7 +8,7 @@ import { PRIORITY } from '../../constants';
 const TaskCard = ({ task, user }) => {
 
     return (
-        <div className={'task-card'}>
+        <div className={'task-card'} draggable={true}>
             <div className={'user-details'}>
                 <img src={user?.picture || userPlaceholder} className={'user-image'} alt={'user'}/>
             </div>
