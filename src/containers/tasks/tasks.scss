@@ -9,7 +9,6 @@
         align-items: center;
         overflow-y: auto;
         &.pane{
-            width: 95%;
             .panes-container {
                 width: 100%;
                 flex: 1;
@@ -28,6 +27,14 @@
                         width: 100%;
                         flex: 1;
                         margin-top: 10px;
+                        align-items: center;
+                        display: flex;
+                        overflow-y: auto;
+                        overflow-x: hidden;
+                        padding: 0 15px;
+                        flex-direction: column;
+                        min-width: 350px;
+                        max-width: 450px;
                     }
                 }
             }

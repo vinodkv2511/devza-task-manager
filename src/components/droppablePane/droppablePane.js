@@ -1,6 +1,6 @@
 import './droppablePane.scss';
 
-const DroppablePane = ({ onDrop, onDragOver, className }) => {
+const DroppablePane = ({ onDrop, onDragOver, className, children }) => {
 
     const handleDrop = (e) => {
         onDrop && onDrop(e);
@@ -12,7 +12,7 @@ const DroppablePane = ({ onDrop, onDragOver, className }) => {
 
     return (
         <div className={`droppable-pane ${className}`}  onDrop={handleDrop} onDragOver={handleDragOver} >
-
+            {children}
         </div>
     )
 }
