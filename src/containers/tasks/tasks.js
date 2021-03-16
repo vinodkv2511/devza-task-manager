@@ -43,19 +43,19 @@ const Tasks = () => {
                 <div className={'priority-pane-container'}>
                     <p className={'pane-label'}>Low</p>
                     <DroppablePane className={'pane'}>
-                        {renderTasks(tasks.filter( task => PRIORITY[task.priority] === 'low'))}
+                        {renderTasks(tasks.filter( task => PRIORITY[task.priority] === 'low'), users)}
                     </DroppablePane>
                 </div>
                 <div className={'priority-pane-container'}>
                     <p className={'pane-label'}>Medium</p>
                     <DroppablePane  className={'pane'}>
-                        {renderTasks(tasks.filter( task => PRIORITY[task.priority] === 'medium'))}
+                        {renderTasks(tasks.filter( task => PRIORITY[task.priority] === 'medium'), users)}
                     </DroppablePane>
                 </div>
                 <div className={'priority-pane-container'}>
                     <p className={'pane-label'}>High</p>
                     <DroppablePane  className={'pane'}>
-                        {renderTasks(tasks.filter( task => PRIORITY[task.priority] === 'high'))}
+                        {renderTasks(tasks.filter( task => PRIORITY[task.priority] === 'high'), users)}
                     </DroppablePane>
                 </div>
             </div>
