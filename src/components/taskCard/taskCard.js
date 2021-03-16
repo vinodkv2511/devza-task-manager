@@ -5,6 +5,7 @@ import './taskCard.scss';
 
 import userPlaceholder from '../../assets/images/user.png';
 import spinnerSvg from '../../assets/images/Rolling-1s-200px.svg';
+import warningSvg from '../../assets/images/exclamation-triangle.svg';
 import { PRIORITY, DRAGGABLE_TYPES } from '../../constants';
 
 
@@ -37,7 +38,7 @@ const TaskCard = ({ task, user, isUpdating, updateError }) => {
                 isUpdating
                 ? <img className="card-status-icon-small" src={spinnerSvg} alt='spinner' title={`Please wait. Saving your changes!`}/>
                 : updateError 
-                    ? <img className="card-status-icon-small" src={spinnerSvg} alt={'error'} title={`${updateError}\nPlease refresh the page to see saved state`}/>
+                    ? <img className="card-status-icon-small" src={warningSvg} alt={'error'} title={`${updateError}\nPlease refresh the page to see saved state`}/>
                     : null
             }
         </div>
