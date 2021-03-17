@@ -226,7 +226,7 @@ const Tasks = () => {
                         onChange={ e => setPriorityFilter(e.target.value)} 
                         value={priorityFilter}
                     >
-                        <option value={''}>All filters</option>
+                        <option value={''}>All Priorities</option>
                         <option value={1}>Low</option>
                         <option value={2}>Medium</option>
                         <option value={3}>High</option>
