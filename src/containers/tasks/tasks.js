@@ -178,7 +178,11 @@ const Tasks = () => {
         if(modalMode === 'edit') {
             let newTasks = [...tasks];
             let taskIndex = newTasks.findIndex( task => task.id === data.taskid);
-            newTasks.splice(taskIndex, 1, { ...newTasks[taskIndex], ...data })
+            newTasks.splice(taskIndex, 1, { 
+                ...newTasks[taskIndex], 
+                ...data,
+                assigned_name: users.find(user => user.id === data.assigned_to)?.name 
+            })
             setTasks(newTasks);
             handleModalClose();
             updateTask(data);
