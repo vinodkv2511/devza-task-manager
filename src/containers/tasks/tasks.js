@@ -17,10 +17,11 @@ import Modal from '../../components/modal/modal';
 import Button from '../../components/button/button';
 import BlockingLoader from '../../components/blockingLoader/blockingLoader';
 import moment from 'moment';
+import TaskForm from '../../components/taskForm/taskForm';
 
 const Tasks = () => {
 
-    const [ isPaneMode, setIsPaneMode] = useState(true);
+    const [ isPaneMode, setIsPaneMode] = useState(false);
     const [ tasks, setTasks ] = useState([]);
     const [ users, setUsers ] = useState([]);
 
@@ -30,7 +31,7 @@ const Tasks = () => {
     const [ tasksUpdating, setTasksUpdating ] = useState({});
     const [ tasksUpdateErrors, setTasksUpdateErrors ] = useState({});
 
-    const [ editOrDelete, setEditOrDelete ] = useState(null); // can have edit or delete as values
+    const [ modalMode, setModalMode ] = useState(null); // can have create, edit or delete as values
     const [ activeTask, setActiveTask ] = useState(null); // Task being edited or deleted
 
     const [ searchKeyword, setSearchKeyword ] = useState('');
@@ -100,17 +101,22 @@ const Tasks = () => {
     }
 
     const handleEditClick = (task) => {
-        setEditOrDelete('edit');
+        setModalMode('edit');
         setActiveTask(task);
     } 
 
+    const handleNewTaskClick = () => {
+        setModalMode('create');
+        setActiveTask({});
+    }
+
     const handleDeleteClick = (task) => {
-        setEditOrDelete('delete');
+        setModalMode('delete');
         setActiveTask(task);
     }
 
     const handleModalClose = () => {
-        setEditOrDelete(null);
+        setModalMode(null);
         setActiveTask(null);
     }
 
@@ -148,6 +154,10 @@ const Tasks = () => {
             return tasks;
         }
         return tasks.filter( task => moment(task.due_date).isSame(date, 'date') )
+    }
+
+    const handleTaskFormSubmit = () => {
+
     }
 
     const renderTasks = (tasks) => {
@@ -210,8 +220,13 @@ const Tasks = () => {
         }
     }
 
-    const renderEditForm = () => {
-
+    const renderTaskForm = () => {
+        return <TaskForm
+            isEdit = {modalMode === 'edit'}
+            task = {activeTask}
+            users = {users}
+            onSubmit = {handleTaskFormSubmit}
+        />
     }
 
     const renderDeleteConfirmation = () => {
@@ -231,6 +246,7 @@ const Tasks = () => {
         <DndProvider backend={HTML5Backend}>
             <div className='page tasks-page'>
                 <div className='head-row'>
+                    <Button className={'toggle-pane-mode'} onClick={handleNewTaskClick} label={'+ Create New Task'}/>
                     <select 
                         className={'input'} 
                         onChange={ e => setPriorityFilter(e.target.value)} 
@@ -264,15 +280,16 @@ const Tasks = () => {
                     }
                 </div>
                 {
-                    editOrDelete &&
+                    modalMode &&
                     <Modal
                         onClose={handleModalClose}
                         shouldCloseOnOutsideClick={true}
                     >
+                        <Button label={'+'} className="modal-close-button" onClick={handleModalClose}/>
                         {
-                            editOrDelete === 'edit'
-                            ? renderEditForm()
-                            : renderDeleteConfirmation()
+                            modalMode === 'delete'
+                            ? renderDeleteConfirmation()
+                            : renderTaskForm()
                         }
                     </Modal>
                 }

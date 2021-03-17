@@ -12,6 +12,7 @@
         .toggle-pane-mode {
             border-radius: 0;
             margin-left: 10px;
+            width: 185px;
         }
 
         .input {
@@ -85,5 +86,16 @@
             justify-content: flex-end;
             margin-top: 20px;
         }
+    }
+
+    .modal-close-button {
+        position: absolute;
+        border-width: 0px;
+        border-radius: 0;
+        font-size: 30px;
+        color: $black;
+        transform: rotate(45deg);
+        right: 0;
+        top: 5px;
     }
 }
