@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
@@ -16,6 +16,7 @@ import axios from 'axios';
 import Modal from '../../components/modal/modal';
 import Button from '../../components/button/button';
 import BlockingLoader from '../../components/blockingLoader/blockingLoader';
+import moment from 'moment';
 
 const Tasks = () => {
 
@@ -34,6 +35,7 @@ const Tasks = () => {
 
     const [ searchKeyword, setSearchKeyword ] = useState('');
     const [ priorityFilter, setPriorityFilter ] = useState('');
+    const [ dateFilter, setDateFilter ] = useState('');
     
     useEffect( () => {
         let cancelTokenTasks = axios.CancelToken.source();
@@ -141,6 +143,13 @@ const Tasks = () => {
         return tasks.filter( task => Number(task.priority) === Number(priority))
     }
 
+    const filterTasksByDate = (tasks, date) => {
+        if(!date){
+            return tasks;
+        }
+        return tasks.filter( task => moment(task.due_date).isSame(date, 'date') )
+    }
+
     const renderTasks = (tasks) => {
         const usersMap = {};
         users?.forEach(user => {
@@ -193,6 +202,7 @@ const Tasks = () => {
     const renderContent = () => {
         let filteredTasks = filterTasksBySearch(tasks, searchKeyword);
         filteredTasks = filterTasksByPriority(filteredTasks, priorityFilter);
+        filteredTasks = filterTasksByDate(filteredTasks, dateFilter);
         if( isPaneMode ) {
             return renderPanes(filteredTasks)
         } else {
@@ -231,6 +241,12 @@ const Tasks = () => {
                         <option value={2}>Medium</option>
                         <option value={3}>High</option>
                     </select>
+                    <input 
+                        type={'date'}  
+                        className="input" 
+                        onChange={(e) => setDateFilter(e.target.value)}
+                        value={dateFilter}
+                    />
                     <input 
                         type={'text'} 
                         placeholder={'Search'} 
