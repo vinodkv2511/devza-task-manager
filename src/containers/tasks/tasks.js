@@ -3,7 +3,7 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
 // APIs
-import { fetchTasks, postTaskUpdate } from "../../apis/tasks";
+import { fetchTasks, postTaskUpdate, postTaskDelete } from "../../apis/tasks";
 import { fetchUsers } from "../../apis/users";
 
 // Components
@@ -15,6 +15,7 @@ import DroppablePane from '../../components/droppablePane/droppablePane';
 import axios from 'axios';
 import Modal from '../../components/modal/modal';
 import Button from '../../components/button/button';
+import BlockingLoader from '../../components/blockingLoader/blockingLoader';
 
 const Tasks = () => {
 
@@ -108,6 +109,24 @@ const Tasks = () => {
         setActiveTask(null);
     }
 
+    const submitDelete = async () => {
+        try {
+            setIsLoading(true);
+            await postTaskDelete({taskid: activeTask.id});
+            // Update task list on delete success
+            const newTasks = [...tasks];
+            const taskIndex = newTasks.findIndex(task => task.id === activeTask.id);
+            newTasks.splice(taskIndex, 1);
+            setTasks(newTasks);
+            setIsLoading(false);
+            handleModalClose();
+        } catch (error) {
+            //Toast.. 
+            alert(`Failed to delete\n${error.message}`)
+            setIsLoading(false);
+        }
+    }
+
     const renderTasks = (tasks) => {
         const usersMap = {};
         users?.forEach(user => {
@@ -177,7 +196,7 @@ const Tasks = () => {
                 <p className={'modal-content-text'}>Do you really want to delete {activeTask.id}</p>
                 <div className={'buttons-container'}>
                     <Button label={'CANCEL'} onClick={handleModalClose}/>
-                    <Button label={'DELETE'} isDanger={true}/>
+                    <Button label={'DELETE'} isDanger={true} onClick={submitDelete}/>
                 </div>
             </div>
         )
@@ -191,11 +210,9 @@ const Tasks = () => {
                 </div>
                 <div className={`content-row tasks-content-container ${isPaneMode ? 'pane' : 'list'}`}>
                     {
-                        isLoading
-                        ? <p>Loading ...</p>
-                        : error
-                            ? <p> { error } </p>
-                            : renderContent()
+                        error
+                        ? <p> { error } </p>
+                        : renderContent()
                     }
                 </div>
                 {
@@ -210,6 +227,9 @@ const Tasks = () => {
                             : renderDeleteConfirmation()
                         }
                     </Modal>
+                }
+                {
+                    isLoading && <BlockingLoader />
                 }
             </div>
         </DndProvider>

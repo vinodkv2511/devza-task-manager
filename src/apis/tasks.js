@@ -16,3 +16,17 @@ export const postTaskUpdate = (data) => {
         }
     })   
 }
+
+
+export const postTaskDelete = (data) => {
+
+    let parsedData = new FormData();
+    for( let key in data) {
+        parsedData.append(key, `${data[key]}`);
+    }
+    return client.post('/tasks/delete', parsedData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })   
+}
