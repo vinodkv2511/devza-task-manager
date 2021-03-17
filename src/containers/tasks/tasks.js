@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
@@ -31,6 +31,8 @@ const Tasks = () => {
 
     const [ editOrDelete, setEditOrDelete ] = useState(null); // can have edit or delete as values
     const [ activeTask, setActiveTask ] = useState(null); // Task being edited or deleted
+
+    const [ searchKeyword, setSearchKeyword ] = useState('');
     
     useEffect( () => {
         let cancelTokenTasks = axios.CancelToken.source();
@@ -127,6 +129,10 @@ const Tasks = () => {
         }
     }
 
+    const filterTasksBySearch = useCallback(()=>{
+        return tasks.filter(task => task.message?.toLowerCase().includes(searchKeyword?.toLowerCase()));
+    }, [tasks, searchKeyword])
+
     const renderTasks = (tasks) => {
         const usersMap = {};
         users?.forEach(user => {
@@ -150,7 +156,7 @@ const Tasks = () => {
                 )
     }
 
-    const renderPanes = () => {
+    const renderPanes = (tasks) => {
 
         return (
             <div className="panes-container">
@@ -177,9 +183,9 @@ const Tasks = () => {
     }
 
     const renderContent = () => {
-        console.log(tasks);
+        let tasks = filterTasksBySearch();
         if( isPaneMode ) {
-            return renderPanes()
+            return renderPanes(tasks)
         } else {
             return renderTasks(tasks);
         }
@@ -206,6 +212,13 @@ const Tasks = () => {
         <DndProvider backend={HTML5Backend}>
             <div className='page tasks-page'>
                 <div className='head-row'>
+                    <input 
+                        type={'text'} 
+                        placeholder={'Search'} 
+                        className="input" 
+                        onChange={(e) => setSearchKeyword(e.target.value)}
+                        value={searchKeyword}
+                    />
                     <button className={'toggle-pane-mode'} onClick={()=>{setIsPaneMode(!isPaneMode)}}>{isPaneMode ? 'List View' : 'Pane View'}</button>
                 </div>
                 <div className={`content-row tasks-content-container ${isPaneMode ? 'pane' : 'list'}`}>
