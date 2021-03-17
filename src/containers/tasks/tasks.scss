@@ -1,7 +1,23 @@
+@import '../../assets//styles/colors.scss';
+
 .page.tasks-page {
     align-items: center;
     .head-row {
         align-self: stretch;
+        padding: 0 5%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        .toggle-pane-mode {
+            color: $primary;
+            cursor: pointer;
+            border-width: 0;
+            background-color: transparent;
+            &:focus {
+                outline: none;
+            }
+        }
     }
     .tasks-content-container {
         display: flex;
@@ -37,7 +53,6 @@
                         padding: 0 15px;
                         flex-direction: column;
                         min-width: 350px;
-                        max-width: 450px;
                     }
                 }
             }

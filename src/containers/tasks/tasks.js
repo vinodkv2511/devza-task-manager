@@ -206,7 +206,7 @@ const Tasks = () => {
         <DndProvider backend={HTML5Backend}>
             <div className='page tasks-page'>
                 <div className='head-row'>
-                    HEAD
+                    <button className={'toggle-pane-mode'} onClick={()=>{setIsPaneMode(!isPaneMode)}}>{isPaneMode ? 'List View' : 'Pane View'}</button>
                 </div>
                 <div className={`content-row tasks-content-container ${isPaneMode ? 'pane' : 'list'}`}>
                     {
