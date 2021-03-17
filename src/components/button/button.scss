@@ -1,0 +1,31 @@
+@import '../../assets/styles/colors.scss';
+
+.button {
+    margin: 0 5px;
+    padding: 5px 15px;
+    transition: all ease 0.2s;
+    cursor: pointer;
+    &:focus {
+        outline: none;
+        border-width: 2px;
+    }
+
+    &.secondary {
+        background: transparent;
+        border-radius: 50px;
+        border-width: 1px;
+        border-color: $primary;
+        color: $primary;
+        font-weight: 500;
+
+        &.danger{
+            color: $critical-red;
+            border-color: $critical-red;
+        }
+    }
+
+    &.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+}

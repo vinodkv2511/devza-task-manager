@@ -1,0 +1,23 @@
+@import '../../assets/styles/colors.scss';
+
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: $translucent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .modal-inner {
+        background-color: $white;
+        padding: 20px;
+        border-radius: 10px;
+        min-width: 330px;
+        max-width: 50%;
+        box-shadow: 0 0 15px 5px $shadow-grey;
+        position: relative;
+    }
+}

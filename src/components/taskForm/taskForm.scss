@@ -1,0 +1,41 @@
+@import '../../assets/styles/colors.scss';
+
+.task-form-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+
+    .task-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .modal-head {
+            font-size: 1.2rem;
+            font-weight: 700;
+            align-self: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .label {
+            font-size: 0.85rem;
+            align-self: flex-start;
+        }
+
+        .input {
+            min-width: 300px;
+            padding: 10px;
+            height: 42px;
+            margin: 5px 0 12px 0;
+        }
+
+        .submit-button {
+            margin: 20px 0 5px 0;
+            padding: 10px 20px;
+            color: $white;
+            background-color: $primary;
+            letter-spacing: 0.1em;
+            align-self: flex-end;
+        }
+    }
+}

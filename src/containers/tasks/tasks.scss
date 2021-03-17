@@ -1,0 +1,105 @@
+@import '../../assets//styles/colors.scss';
+
+.page.tasks-page {
+    align-items: center;
+    .head-row {
+        align-self: stretch;
+        padding: 0 5%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        .toggle-pane-mode {
+            border-radius: 0;
+            margin-left: 10px;
+            width: 185px;
+        }
+
+        .input {
+            padding: 5px;
+            margin: 0 10px;
+            max-height: 31px;
+        }
+        
+        .app-title {
+            margin-right: auto;
+        }
+    }
+    .tasks-content-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-y: auto;
+        &.pane{
+            width: 90%;
+            .panes-container {
+                width: 100%;
+                min-width: 1160px;
+                flex: 1;
+                display: flex;
+                flex-direction: row;
+                align-items: stretch;
+                justify-content: space-between;
+                padding: 50px 0;
+                height: calc(100vh - 120px);
+                .priority-pane-container {
+                    width: 30%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    
+                    .pane {
+                        width: 100%;
+                        flex: 1;
+                        margin-top: 10px;
+                        align-items: center;
+                        display: flex;
+                        overflow-y: auto;
+                        overflow-x: hidden;
+                        padding: 0 15px;
+                        flex-direction: column;
+                        min-width: 350px;
+                    }
+                }
+            }
+        }
+
+        &.list {
+            width: 70%;
+        }
+    }
+
+    .modal-content-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        .modal-head {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;;
+        }
+
+        .modal-content-text {
+            font-size: 0.9rem;
+        }
+
+        .buttons-container {
+            display: flex;
+            width: 100%;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+    }
+
+    .modal-close-button {
+        position: absolute;
+        border-width: 0px;
+        border-radius: 0;
+        font-size: 30px;
+        color: $black;
+        transform: rotate(45deg);
+        right: 0;
+        top: 5px;
+    }
+}
