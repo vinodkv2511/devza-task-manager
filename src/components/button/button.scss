@@ -18,10 +18,6 @@
         color: $primary;
         font-weight: 500;
 
-        &:hover {
-            letter-spacing: 0.1em;
-        }
-
         &.danger{
             color: $critical-red;
             border-color: $critical-red;
