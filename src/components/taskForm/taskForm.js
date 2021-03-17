@@ -19,16 +19,26 @@ const TaskForm = ({ task, onSubmit, users, isEdit }) => {
             setDueDate( task.due_date ? moment(task.due_date).format('YYYY-MM-DD') : '');
             setAssignedTo(task.assigned_to || '');
         }
-    }, [])
+    }, [isEdit])
 
-    const handleSubmit = () => {
-        
+    const handleSubmit = (e) => {
+        e && e.preventDefault();
+        let data = {
+            message,
+            priority,
+            due_date: dueDate,
+            assigned_to: assignedTo
+        }
+
+        if(isEdit) data.taskid = task.id;
+
+        onSubmit && onSubmit(data)
     }
 
 
     return (
         <div className="task-form-container">
-            <form className="task-form">
+            <form className="task-form" onSubmit={handleSubmit}>
                 <p className="modal-head">{isEdit ? 'Edit' : 'Create'} Task</p>
                 <label className="label">Task</label>
                 <input
@@ -70,12 +80,12 @@ const TaskForm = ({ task, onSubmit, users, isEdit }) => {
                     <option value={''}>Select an user</option>
                     {
                         users?.map( user => {
-                            return <option value={user.id}>{user.name}</option>
+                            return <option key={`${user.id}`} value={user.id}>{user.name}</option>
                         })
                     }
                 </select>
 
-                <Button label={'SUBMIT'} className={'submit-button'} onClick={handleSubmit}/>
+                <Button label={'SUBMIT'} className={'submit-button'} onClick={handleSubmit} disabled={!message}/>
             </form>
         </div>
     )

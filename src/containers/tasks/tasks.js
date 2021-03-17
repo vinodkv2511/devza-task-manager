@@ -156,8 +156,8 @@ const Tasks = () => {
         return tasks.filter( task => moment(task.due_date).isSame(date, 'date') )
     }
 
-    const handleTaskFormSubmit = () => {
-
+    const handleTaskFormSubmit = (data) => {
+        console.log(data);
     }
 
     const renderTasks = (tasks) => {
