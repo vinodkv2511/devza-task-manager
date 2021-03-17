@@ -288,6 +288,7 @@ const Tasks = () => {
         <DndProvider backend={HTML5Backend}>
             <div className='page tasks-page'>
                 <div className='head-row'>
+                    <h2 className="app-title">Task Manager</h2>
                     <Button className={'toggle-pane-mode'} onClick={handleNewTaskClick} label={'+ Create New Task'}/>
                     <select 
                         className={'input'} 
