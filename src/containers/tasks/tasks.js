@@ -3,7 +3,7 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
 // APIs
-import { fetchTasks, postTaskUpdate, postTaskDelete } from "../../apis/tasks";
+import { fetchTasks, postTaskUpdate, postTaskDelete, postTaskCreate } from "../../apis/tasks";
 import { fetchUsers } from "../../apis/users";
 
 // Components
@@ -27,6 +27,7 @@ const Tasks = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [createError, setCreateError] = useState('');
 
     const [ tasksUpdating, setTasksUpdating ] = useState({});
     const [ tasksUpdateErrors, setTasksUpdateErrors ] = useState({});
@@ -83,6 +84,23 @@ const Tasks = () => {
             }
             setTasksUpdateErrors({...tasksUpdateErrors, [data.id]: e.message});
             setTasksUpdating({...tasksUpdating, [data.id]: false});
+        } 
+    }
+
+    const createTask = async (data) => {
+        try {
+            setIsLoading(true);
+            let dataToPost = {...data, taskid: data.id}
+            let resp = await postTaskCreate(dataToPost);
+            setIsLoading(false);
+            setCreateError('');
+            return resp?.data.taskid;
+        } catch (e) {
+            if(axios.isCancel(e)) {
+                return;
+            }
+            setIsLoading(false);
+            setCreateError(e.message);
         } 
     }
 
@@ -164,6 +182,23 @@ const Tasks = () => {
             setTasks(newTasks);
             handleModalClose();
             updateTask(data);
+        } else {
+            let taskid = await createTask(data);
+            if(createError){
+                alert(`Error creating task!\n${createError}`);
+                setCreateError('');
+            } else {
+                setTasks([
+                    {
+                        ...data,
+                        id:taskid,
+                        taskid: taskid,
+                        assigned_name: users.find(user => user.id === data.assigned_to)?.name
+                    },
+                    ...tasks
+                ]);
+                handleModalClose();
+            }
         }
     }
 

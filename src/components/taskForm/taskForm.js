@@ -88,7 +88,7 @@ const TaskForm = ({ task, onSubmit, users, isEdit }) => {
                     }
                 </select>
 
-                <Button label={'SUBMIT'} className={'submit-button'} onClick={handleSubmit} disabled={!message}/>
+                <Button label={'SUBMIT'} className={'submit-button'} disabled={!message}/>
             </form>
         </div>
     )
