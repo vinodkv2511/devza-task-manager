@@ -30,7 +30,10 @@ const TaskForm = ({ task, onSubmit, users, isEdit }) => {
             assigned_to: assignedTo
         }
 
-        if(isEdit) data.taskid = task.id;
+        if(isEdit) {
+            data.taskid = task.id;
+            data.id = task.id;
+        }
 
         onSubmit && onSubmit(data)
     }

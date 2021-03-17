@@ -156,8 +156,15 @@ const Tasks = () => {
         return tasks.filter( task => moment(task.due_date).isSame(date, 'date') )
     }
 
-    const handleTaskFormSubmit = (data) => {
-        console.log(data);
+    const handleTaskFormSubmit = async (data) => {
+        if(modalMode === 'edit') {
+            let newTasks = [...tasks];
+            let taskIndex = newTasks.findIndex( task => task.id === data.taskid);
+            newTasks.splice(taskIndex, 1, { ...newTasks[taskIndex], ...data })
+            setTasks(newTasks);
+            handleModalClose();
+            updateTask(data);
+        }
     }
 
     const renderTasks = (tasks) => {
