@@ -10,19 +10,13 @@
         align-items: center;
 
         .toggle-pane-mode {
-            color: $primary;
-            cursor: pointer;
-            border-width: 0;
-            padding: 5px;
-            margin-left: 15px;
-            background-color: transparent;
-            &:focus {
-                outline: none;
-            }
+            border-radius: 0;
+            margin-left: 10px;
         }
 
         .input {
             padding: 5px;
+            margin: 0 10px;
         }
     }
     .tasks-content-container {

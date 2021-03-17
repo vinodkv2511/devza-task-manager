@@ -33,6 +33,7 @@ const Tasks = () => {
     const [ activeTask, setActiveTask ] = useState(null); // Task being edited or deleted
 
     const [ searchKeyword, setSearchKeyword ] = useState('');
+    const [ priorityFilter, setPriorityFilter ] = useState('');
     
     useEffect( () => {
         let cancelTokenTasks = axios.CancelToken.source();
@@ -129,9 +130,16 @@ const Tasks = () => {
         }
     }
 
-    const filterTasksBySearch = useCallback(()=>{
+    const filterTasksBySearch = (tasks, searchKeyword) => {
         return tasks.filter(task => task.message?.toLowerCase().includes(searchKeyword?.toLowerCase()));
-    }, [tasks, searchKeyword])
+    }
+
+    const filterTasksByPriority = (tasks, priority) => {
+        if(!priority){
+            return tasks;
+        }
+        return tasks.filter( task => Number(task.priority) === Number(priority))
+    }
 
     const renderTasks = (tasks) => {
         const usersMap = {};
@@ -163,19 +171,19 @@ const Tasks = () => {
                 <div className={'priority-pane-container'}>
                     <p className={'pane-label'}>Low</p>
                     <DroppablePane className={'pane'} onDrop={(item) => handleDrop(1, item)}>
-                        {renderTasks(tasks.filter( task => Number(task.priority) === 1))}
+                        {renderTasks(filterTasksByPriority(tasks, 1))}
                     </DroppablePane>
                 </div>
                 <div className={'priority-pane-container'}>
                     <p className={'pane-label'}>Medium</p>
                     <DroppablePane  className={'pane'} onDrop={(item) => handleDrop(2, item)}>
-                        {renderTasks(tasks.filter( task => Number(task.priority) === 2))}
+                        {renderTasks(filterTasksByPriority(tasks, 2))}
                     </DroppablePane>
                 </div>
                 <div className={'priority-pane-container'}>
                     <p className={'pane-label'}>High</p>
                     <DroppablePane  className={'pane'} onDrop={(item) => handleDrop(3, item)}>
-                        {renderTasks(tasks.filter( task => Number(task.priority) === 3))}
+                        {renderTasks(filterTasksByPriority(tasks, 3))}
                     </DroppablePane>
                 </div>
             </div>
@@ -183,11 +191,12 @@ const Tasks = () => {
     }
 
     const renderContent = () => {
-        let tasks = filterTasksBySearch();
+        let filteredTasks = filterTasksBySearch(tasks, searchKeyword);
+        filteredTasks = filterTasksByPriority(filteredTasks, priorityFilter);
         if( isPaneMode ) {
-            return renderPanes(tasks)
+            return renderPanes(filteredTasks)
         } else {
-            return renderTasks(tasks);
+            return renderTasks(filteredTasks);
         }
     }
 
@@ -212,6 +221,16 @@ const Tasks = () => {
         <DndProvider backend={HTML5Backend}>
             <div className='page tasks-page'>
                 <div className='head-row'>
+                    <select 
+                        className={'input'} 
+                        onChange={ e => setPriorityFilter(e.target.value)} 
+                        value={priorityFilter}
+                    >
+                        <option value={''}>All filters</option>
+                        <option value={1}>Low</option>
+                        <option value={2}>Medium</option>
+                        <option value={3}>High</option>
+                    </select>
                     <input 
                         type={'text'} 
                         placeholder={'Search'} 
@@ -219,7 +238,7 @@ const Tasks = () => {
                         onChange={(e) => setSearchKeyword(e.target.value)}
                         value={searchKeyword}
                     />
-                    <button className={'toggle-pane-mode'} onClick={()=>{setIsPaneMode(!isPaneMode)}}>{isPaneMode ? 'List View' : 'Pane View'}</button>
+                    <Button className={'toggle-pane-mode'} onClick={()=>{setIsPaneMode(!isPaneMode)}} label={isPaneMode ? 'List View' : 'Pane View'}/>
                 </div>
                 <div className={`content-row tasks-content-container ${isPaneMode ? 'pane' : 'list'}`}>
                     {
