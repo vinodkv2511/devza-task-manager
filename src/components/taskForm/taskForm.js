@@ -26,7 +26,7 @@ const TaskForm = ({ task, onSubmit, users, isEdit }) => {
         let data = {
             message,
             priority,
-            due_date: dueDate,
+            due_date: moment(dueDate).format('YYYY-MM-DD HH:mm:ss'),
             assigned_to: assignedTo
         }
 
